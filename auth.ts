@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
-import GitHub from "next-auth/providers/github";
+import GitHubProvider from "next-auth/providers/github";
+import ResendProvider from "next-auth/providers/resend";
 import db from '@/lib/db';
 import { compareSync } from 'bcrypt-ts';
 import { PrismaAdapter } from "@auth/prisma-adapter";
@@ -65,8 +66,12 @@ export const {
         }
       }
     }),
-    GitHub({
+    GitHubProvider({
       allowDangerousEmailAccountLinking: true,
     }),
+    ResendProvider({
+      apiKey: process.env.AUTH_RESEND_KEY,
+      from: 'Acme <onboarding@resend.dev>',
+    })
   ],
 });
