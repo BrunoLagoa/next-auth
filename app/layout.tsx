@@ -40,7 +40,6 @@ export default function RootLayout({
             <div className='absolute top-5 right-5'>
               <ModeToggle />
             </div>
-
             {children}
           </ThemeProvider>
         </SessionProvider>

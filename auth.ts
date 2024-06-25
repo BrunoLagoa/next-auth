@@ -1,7 +1,12 @@
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
+import GitHub from "next-auth/providers/github";
 import db from '@/lib/db';
-import { compareSync } from 'bcrypt-ts'
+import { compareSync } from 'bcrypt-ts';
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export const {
   handlers: { GET, POST },
@@ -13,6 +18,10 @@ export const {
   //   signIn: '/login',
   //   signOut: '/logout',
   // },
+  adapter: PrismaAdapter(prisma),
+  session: {
+    strategy: 'jwt',
+  },
   providers: [
     Credentials({
       credentials: {
@@ -55,6 +64,9 @@ export const {
           email: user.email,
         }
       }
-    })
+    }),
+    GitHub({
+      allowDangerousEmailAccountLinking: true,
+    }),
   ],
 });
