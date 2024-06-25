@@ -1,4 +1,4 @@
-import NextAuth from 'next-auth';
+import NextAuth, { User } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import GitHubProvider from "next-auth/providers/github";
 import ResendProvider from "next-auth/providers/resend";
@@ -6,6 +6,14 @@ import db from '@/lib/db';
 import { compareSync } from 'bcrypt-ts';
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
+
+declare module "next-auth" {
+  interface Session {
+    user: User & {
+      githubProfile: any;
+    }
+  }
+}
 
 const prisma = new PrismaClient();
 
@@ -74,4 +82,15 @@ export const {
       from: 'Acme <onboarding@resend.dev>',
     })
   ],
+  callbacks: {
+    jwt({ token, profile }) {
+      return { githubProfile: profile, ...token }
+    },
+    session({ session, token }) {
+      session.user.githubProfile = token.githubProfile
+
+      return session
+      // return { ...session, githubProfile: token.githubProfile }
+    }
+  }
 });

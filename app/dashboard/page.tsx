@@ -35,6 +35,12 @@ export default async function Dashboard() {
         <p className='text-lg text-muted-foreground'>
           Email: {session.user?.email}
         </p>
+        <p className='text-lg text-muted-foreground'>
+          Seguidores: {session.user.githubProfile.followers}
+        </p>
+        <p className='text-lg text-muted-foreground'>
+          Bio: {session.user.githubProfile.bio}
+        </p>
         <hr className='w-1/4 mx-auto mt-5 mb-16' />
 
         <section className='flex flex-wrap items-center justify-center gap-3'>
